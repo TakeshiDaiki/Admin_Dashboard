@@ -1,10 +1,7 @@
 import request from 'supertest';
 import app from '../app';
 import User from '../models/User';
-import generateToken from '../utils/generateToken';
-
-jest.mock('../models/User');
-jest.mock('../utils/generateToken');
+import * as genToken from '../utils/generateToken';
 
 describe('Auth Unit Tests', () => {
     beforeEach(() => {
@@ -13,14 +10,14 @@ describe('Auth Unit Tests', () => {
 
     describe('POST /api/auth/register', () => {
         it('should register a new user', async () => {
-            (User.findOne as jest.Mock).mockResolvedValue(null);
-            (User.create as jest.Mock).mockResolvedValue({
+            jest.spyOn(User, 'findOne').mockResolvedValue(null as any);
+            jest.spyOn(User, 'create').mockResolvedValue({
                 _id: 'userid',
                 name: 'Test',
                 email: 'test@example.com',
                 role: 'user',
-            });
-            (generateToken as jest.Mock).mockReturnValue({ token: 't', refreshToken: 'r' });
+            } as any);
+            jest.spyOn(genToken as any, 'default').mockReturnValue({ token: 't', refreshToken: 'r' } as any);
 
             const res = await request(app).post('/api/auth/register').send({
                 name: 'Test',
@@ -33,7 +30,7 @@ describe('Auth Unit Tests', () => {
         });
 
         it('should fail if user exists', async () => {
-            (User.findOne as jest.Mock).mockResolvedValue({ name: 'Existing' });
+            jest.spyOn(User, 'findOne').mockResolvedValue({ name: 'Existing' } as any);
 
             const res = await request(app).post('/api/auth/register').send({
                 name: 'Test',

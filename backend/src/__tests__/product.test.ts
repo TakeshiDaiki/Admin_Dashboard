@@ -1,9 +1,7 @@
 import request from 'supertest';
 import app from '../app';
 import Product from '../models/Product';
-import * as AuthMiddleware from '../middlewares/authMiddleware';
 
-jest.mock('../models/Product');
 jest.mock('../middlewares/authMiddleware', () => ({
     protect: (req: any, res: any, next: any) => {
         req.user = { _id: 'adminid', role: 'admin' };
@@ -18,7 +16,7 @@ describe('Product Unit Tests', () => {
     });
 
     it('should get all products', async () => {
-        (Product.find as jest.Mock).mockResolvedValue([{ name: 'P1' }]);
+        jest.spyOn(Product, 'find').mockResolvedValue([{ name: 'P1' }] as any);
 
         const res = await request(app).get('/api/products');
 
@@ -27,10 +25,10 @@ describe('Product Unit Tests', () => {
     });
 
     it('should create product', async () => {
-        (Product.prototype.save as jest.Mock).mockResolvedValue({
+        jest.spyOn(Product.prototype, 'save').mockResolvedValue({
             name: 'New Product',
             price: 100
-        });
+        } as any);
 
         const res = await request(app).post('/api/products').send({
             name: 'New Product',
