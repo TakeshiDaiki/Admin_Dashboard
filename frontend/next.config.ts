@@ -1,4 +1,4 @@
-// Configuración limpia para Vercel
+// Clean Vercel setup
 
 import type { NextConfig } from "next";
 
