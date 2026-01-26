@@ -1,9 +1,7 @@
+// Configuración limpia para Vercel
+
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  experimental: {
-    appDir: true
-  }
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
