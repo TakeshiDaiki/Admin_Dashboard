@@ -1,23 +1,44 @@
 {
   "compilerOptions": {
+    /* Target */
     "target": "es2016",
+
+    /* Module system */
     "module": "commonjs",
-    "rootDir": "./src",
     "moduleResolution": "node",
-    "baseUrl": "./src",
+
+    /* Paths */
+    "rootDir": "./src",
     "outDir": "./dist",
+    "baseUrl": "./src",
+
+    /* Interop */
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+
+    /* Strictness */
     "strict": true,
+
+    /* Speed + Production */
     "skipLibCheck": true,
+
+    /* Decorators (por si usas clases, validators, etc.) */
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+
+    /* Node globals como process */
+    "types": ["node"]
   },
+
   "include": [
     "src/**/*"
   ],
+
   "exclude": [
     "node_modules",
+    "dist",
+
+    /* Muy importante: NO compilar tests en producción */
     "src/__tests__",
     "**/*.test.ts",
     "**/*.spec.ts"
