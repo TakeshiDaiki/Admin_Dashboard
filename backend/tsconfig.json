@@ -22,12 +22,12 @@
     /* Speed + Production */
     "skipLibCheck": true,
 
-    /* Decorators (por si usas clases, validators, etc.) */
+    /* Decorators */
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
-    /* Node globals como process */
-    "types": ["node"]
+    /* 🔑 CLAVE: tipos globales */
+    "types": ["node", "jest"]
   },
 
   "include": [
@@ -36,11 +36,6 @@
 
   "exclude": [
     "node_modules",
-    "dist",
-
-    /* Muy importante: NO compilar tests en producción */
-    "src/__tests__",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "dist"
   ]
 }
