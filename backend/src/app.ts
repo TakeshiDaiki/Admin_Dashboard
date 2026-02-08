@@ -8,18 +8,28 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 const app = express();
 
-// Middleware
+/* =======================
+   MIDDLEWARES BÁSICOS
+======================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
 app.use(morgan('dev'));
-app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    credentials: true,
-}));
 
-// Swagger Setup
+/* =======================
+   CORS — PRODUCCIÓN REAL
+======================= */
+app.use(
+    cors({
+        origin: process.env.CLIENT_URL, // ← viene desde Render
+        credentials: true,
+    })
+);
+
+/* =======================
+   SWAGGER CONFIG
+======================= */
 const swaggerOptions = {
     definition: {
         openapi: '3.0.0',
@@ -30,7 +40,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${process.env.PORT || 3001}`,
+                url: process.env.API_URL || 'http://localhost:3001',
             },
         ],
     },
@@ -40,7 +50,9 @@ const swaggerOptions = {
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
-// Routes
+/* =======================
+   ROUTES
+======================= */
 import authRoutes from './routes/authRoutes';
 import userRoutes from './routes/userRoutes';
 import productRoutes from './routes/productRoutes';
@@ -51,15 +63,23 @@ app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+/* =======================
+   HEALTH + ROOT
+======================= */
+app.get('/health', (_req, res) => {
+    res.status(200).json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+    });
 });
 
-app.get('/', (req, res) => {
-    res.send('API is running...');
+app.get('/', (_req, res) => {
+    res.send('Admin Dashboard API is running');
 });
 
+/* =======================
+   ERROR HANDLERS
+======================= */
 import { notFound, errorHandler } from './middlewares/errorMiddleware';
 
 app.use(notFound);
